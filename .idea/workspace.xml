@@ -4,39 +4,51 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="530a8dab-285d-4c3e-ba87-e6c87fb749aa" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/Apteka24Application.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/config/DataInitializer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/controllers/AuthController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/controllers/OrderController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/controllers/ProductController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/dto/AuthRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/dto/CartItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/dto/OrderRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/models/Order.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/models/OrderItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/models/Product.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/models/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/repositories/OrderRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/repositories/ProductRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/repositories/UserRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/services/OrderService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/services/ProductService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/apteka24/services/UserService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+    <list default="true" id="530a8dab-285d-4c3e-ba87-e6c87fb749aa" name="Changes" comment="Adding to git&#10;Added unit tests and feature tests">
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/config/CucumberSpringConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/steps/CommonSteps.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/steps/TestSteps.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/resources/features/test.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/CucumberUiTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/CucumberUiTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/steps/AdminSteps.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/steps/AdminSteps.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/steps/AuthorizationSteps.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/steps/AuthorizationSteps.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/steps/HistorySteps.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/steps/HistorySteps.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/steps/OrderSteps.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/steps/OrderSteps.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/steps/RegistrationSteps.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/steps/RegistrationSteps.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/steps/SearchSteps.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/apteka24/bdd/steps/SearchSteps.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/features/admin_goods_feature.feature" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/features/admin_pharmacy_feature.feature" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/features/admin_user_feature.feature" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/features/authorization_feature.feature" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/features/history_feature.feature" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/features/order_feature.feature" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/features/registration_feature.feature" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/features/search_feature.feature" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/resources/junit-platform.properties" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="workOffline" value="true" />
+      </MavenGeneralSettings>
+    </option>
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
@@ -65,6 +77,8 @@
       <command value="mvn -Dtest=CucumberUiTest -Dcucumber.filter.tags=&quot;@success or @fail&quot; test" />
       <command value="mvn test -Dtest=CucumberUiTest -Dcucumber.filter.tags=&quot;@auth&quot;" />
       <command value="mvn test -Dcucumber.filter.tags=&quot;@auth&quot; -Dtest=*Cucumber*" />
+      <command value="mvn -U clean test" />
+      <command value="mvn clean" />
     </option>
   </component>
   <component name="RunManager" selected="JUnit.CucumberUiTest">
@@ -128,6 +142,27 @@
       <option name="presentableId" value="Default" />
       <updated>1762853072926</updated>
     </task>
+    <task id="LOCAL-00001" summary="Adding to git&#10;Added unit tests and feature tests">
+      <option name="closed" value="true" />
+      <created>1762859216463</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1762859216463</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Adding to git&#10;Added unit tests and feature tests">
+      <option name="closed" value="true" />
+      <created>1762859284080</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1762859284080</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Adding to git&#10;Added unit tests and feature tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding to git&#10;Added unit tests and feature tests" />
   </component>
 </project>
