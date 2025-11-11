@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина - Аптека24</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/stylesheet.css">
+    <style>
+        .cart-header {
+            background: linear-gradient(135deg, #4a90e2, #5cb85c);
+            color: white;
+            padding: 2rem 0;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .cart-item {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .cart-summary {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 20px;
+        }
+        
+        .quantity-control {
+            display: flex;
+            align-items: center;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #dee2e6;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .quantity-input {
+            width: 50px;
+            height: 30px;
+            border: 1px solid #dee2e6;
+            border-left: none;
+            border-right: none;
+            text-align: center;
+        }
+        
+        .checkout-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .checkout-steps::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e9ecef;
+            z-index: 1;
+        }
+        
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .step.active .step-number {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .step.completed .step-number {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        .delivery-option {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .delivery-option:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .delivery-option.selected {
+            border-color: var(--primary-color);
+            background-color: rgba(74, 144, 226, 0.05);
+        }
+        
+        .form-section {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 3rem;
+        }
+        
+        .empty-cart-icon {
+            font-size: 4rem;
+            color: #dee2e6;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top">
+        <div class="container">
+            <a class="navbar-brand logo" href="index.html">
+                <i class="fas fa-prescription-bottle-alt me-2"></i>Аптека24
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">Товары</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">Личный кабинет</a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="cart.html" class="btn btn-outline-primary me-2 position-relative">
+                        <i class="fas fa-shopping-cart"></i> Корзина
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">3</span>
+                    </a>
+                    <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Войти</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Шапка корзины -->
+    <section class="cart-header">
+        <div class="container">
+            <h1 class="text-center">Корзина</h1>
+        </div>
+    </section>
+
+    <!-- Шаги оформления заказа -->
+    <section class="checkout-steps-section">
+        <div class="container">
+            <div class="checkout-steps">
+                <div class="step active" id="step1">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Корзина</div>
+                </div>
+                <div class="step" id="step2">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Доставка</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Основной контент -->
+    <section class="cart-content mb-5">
+        <div class="container">
+            <div class="row">
+                <!-- Содержимое корзины -->
+                <div class="col-lg-8">
+                    <div id="cartItems">
+                        <!-- Товары будут загружены через JavaScript -->
+                    </div>
+
+                    <!-- Пустая корзина -->
+                    <div class="empty-cart d-none" id="emptyCart">
+                        <div class="empty-cart-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <h3>Ваша корзина пуста</h3>
+                        <p>Добавьте товары из каталога, чтобы сделать заказ</p>
+                        <a href="products.html" class="btn btn-primary">Перейти к покупкам</a>
+                    </div>
+
+                    <!-- Форма доставки -->
+                    <div class="delivery-form d-none" id="deliveryForm">
+                        <div class="form-section">
+                            <h4 class="mb-3">Способ доставки</h4>
+
+                            <div class="delivery-option selected" data-type="COURIER">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="deliveryType" id="courierDelivery" checked value="COURIER">
+                                    <label class="form-check-label fw-bold" for="courierDelivery">
+                                        Курьерская доставка
+                                    </label>
+                                </div>
+                                <p class="mb-0 mt-2">Доставка курьером на указанный адрес. Срок доставки: 1-2 часа.</p>
+                                <p class="mb-0 text-muted">Стоимость: 200 ₽</p>
+                            </div>
+
+                            <div class="delivery-option" data-type="PICKUP">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="deliveryType" id="pickupDelivery" value="PICKUP">
+                                    <label class="form-check-label fw-bold" for="pickupDelivery">
+                                        Самовывоз из аптеки
+                                    </label>
+                                </div>
+                                <p class="mb-0 mt-2">Забрать заказ самостоятельно из выбранной аптеки.</p>
+                                <p class="mb-0 text-muted">Бесплатно</p>
+                            </div>
+                        </div>
+
+                        <div class="form-section" id="addressSection">
+                            <h4 class="mb-3">Адрес доставки</h4>
+                            <div class="mb-3">
+                                <label for="deliveryAddress" class="form-label">Адрес</label>
+                                <input type="text" class="form-control" id="deliveryAddress" placeholder="Введите адрес доставки" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="deliveryDate" class="form-label">Дата доставки</label>
+                                <input type="date" class="form-control" id="deliveryDate" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="deliveryTime" class="form-label">Время доставки</label>
+                                <select class="form-select" id="deliveryTime" required>
+                                    <option value="10:00-12:00">10:00 - 12:00</option>
+                                    <option value="12:00-14:00">12:00 - 14:00</option>
+                                    <option value="14:00-16:00">14:00 - 16:00</option>
+                                    <option value="16:00-18:00">16:00 - 18:00</option>
+                                    <option value="18:00-20:00">18:00 - 20:00</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="deliveryComment" class="form-label">Комментарий для курьера</label>
+                                <textarea class="form-control" id="deliveryComment" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Кнопка оформления заказа -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button class="btn btn-success btn-lg" id="placeOrderBtn">Оформить заказ</button>
+                        </div>
+                    </div>
+                    <!-- Подтверждение заказа -->
+                    <div class="confirmation d-none" id="confirmation">
+                        <div class="form-section text-center">
+                            <div class="mb-4">
+                                <i class="fas fa-check-circle text-success" style="font-size: 4rem;"></i>
+                            </div>
+                            <h3>Заказ успешно оформлен!</h3>
+                            <p class="mb-3">Номер вашего заказа: <strong id="orderNumber">#28476</strong></p>
+                            <p class="mb-4">Мы отправили подтверждение на вашу электронную почту. В ближайшее время с вами свяжется наш менеджер для уточнения деталей доставки.</p>
+                            <div class="d-flex justify-content-center gap-3">
+                                <a href="profile.html" class="btn btn-primary">Перейти к истории заказов</a>
+                                <a href="products.html" class="btn btn-outline-primary">Продолжить покупки</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Кнопки навигации -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <button class="btn btn-outline-primary" id="prevStepBtn" style="display: none;">Назад</button>
+                        <button class="btn btn-primary" id="nextStepBtn">Перейти к доставке</button>
+                    </div>
+                </div>
+                
+                <!-- Итоговая информация -->
+                <div class="col-lg-4">
+                    <div class="cart-summary">
+                        <h4 class="mb-3">Ваш заказ</h4>
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Товары (<span id="itemsCount">0</span>)</span>
+                            <span id="subtotal">0 ₽</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Доставка</span>
+                            <span id="deliveryCost">0 ₽</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <strong>Итого</strong>
+                            <strong id="totalCost">0 ₽</strong>
+                        </div>
+
+                        <div class="order-notes mb-3">
+                            <label for="orderNotes" class="form-label">Примечание к заказу</label>
+                            <textarea class="form-control" id="orderNotes" rows="2" placeholder="Дополнительные пожелания"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="logo mb-3"><i class="fas fa-prescription-bottle-alt me-2"></i>Аптека24</h5>
+                    <p>Аптека с доставкой на дом. Лекарства, медицинские товары и средства гигиены.</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Контакты</h5>
+                    <p><i class="fas fa-phone me-2"></i> 8 (495) 000-00-01</p>
+                    <p><i class="fas fa-envelope me-2"></i> info@apteka24.ru</p>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> г. Рязань, ул. Циолковского, 5к1</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>Часы работы</h5>
+                    <p>Пн-Пт: 8:00 - 22:00</p>
+                    <p>Сб-Вс: 9:00 - 21:00</p>
+                    <p>Доставка: круглосуточно</p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2023 Аптека24. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <div class="modal fade" id="loginModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Вход в личный кабинет</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginPhone" class="form-label">Номер телефона</label>
+                            <input type="tel" class="form-control" id="loginPhone" placeholder="79998887766" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Пароль</label>
+                            <input type="password" class="form-control" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Войти</button>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <p>Нет аккаунта? <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal" data-bs-dismiss="modal">Зарегистрируйтесь</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="registerModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Регистрация</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="registerForm">
+                        <div class="mb-3">
+                            <label for="registerPhone" class="form-label">Номер телефона</label>
+                            <input type="tel" class="form-control" id="registerPhone" placeholder="79998887766" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label">Пароль</label>
+                            <input type="password" class="form-control" id="registerPassword" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Подтверждение пароля</label>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <p>Уже есть аккаунт? <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" data-bs-dismiss="modal">Войдите</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const API_BASE = 'http://localhost:8080/api';
+        let currentUser = null;
+        let cart = [];
+        let currentStep = 1;
+
+        // Инициализация при загрузке
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadCart();
+            setupEventListeners();
+
+            // Установка минимальной даты доставки (сегодня)
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('deliveryDate').min = today;
+        });
+
+        // Проверка авторизации
+        async function checkAuth() {
+            const userData = localStorage.getItem('user');
+            if (userData) {
+                currentUser = JSON.parse(userData);
+                updateNavigation();
+            }
+        }
+
+        // Обновление навигации
+        function updateNavigation() {
+            if (currentUser) {
+                document.getElementById('authButtons').classList.add('d-none');
+                document.getElementById('userMenu').classList.remove('d-none');
+                updateCartCount();
+            } else {
+                document.getElementById('authButtons').classList.remove('d-none');
+                document.getElementById('userMenu').classList.add('d-none');
+            }
+        }
+
+        // Обновление счетчика корзины
+        function updateCartCount() {
+            document.getElementById('cartCount').textContent = cart.length;
+        }
+
+        // Загрузка корзины
+        function loadCart() {
+            const savedCart = localStorage.getItem('cart');
+            cart = savedCart ? JSON.parse(savedCart) : [];
+            displayCartItems();
+            updateCartSummary();
+        }
+
+        // Отображение товаров в корзине
+        function displayCartItems() {
+            const cartItemsContainer = document.getElementById('cartItems');
+            cartItemsContainer.innerHTML = '';
+
+            if (cart.length === 0) {
+                document.getElementById('cartItems').classList.add('d-none');
+                document.getElementById('emptyCart').classList.remove('d-none');
+                document.getElementById('nextStepBtn').disabled = true;
+                return;
+            }
+
+            document.getElementById('cartItems').classList.remove('d-none');
+            document.getElementById('emptyCart').classList.add('d-none');
+            document.getElementById('nextStepBtn').disabled = false;
+
+            cart.forEach((item, index) => {
+                const totalPrice = item.product.price * item.quantity;
+                const cartItemElement = `
+                    <div class="cart-item">
+                        <div class="row align-items-center">
+                            <div class="col-md-2">
+                                <div class="product-img-small">
+                                    <i class="fas fa-pills text-muted"></i>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <h5>${item.product.name}</h5>
+                                <p class="text-muted small">${item.product.description || ''}</p>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="quantity-control">
+                                    <button class="quantity-btn minus" data-index="${index}">-</button>
+                                    <input type="text" class="quantity-input" value="${item.quantity}" readonly>
+                                    <button class="quantity-btn plus" data-index="${index}">+</button>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="product-price">${totalPrice} ₽</div>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <button class="btn btn-outline-danger btn-sm remove-item" data-index="${index}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                cartItemsContainer.innerHTML += cartItemElement;
+            });
+        }
+
+        // Обновление итоговой суммы
+        function updateCartSummary() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+            const deliveryCost = document.querySelector('input[name="deliveryType"]:checked')?.value === 'COURIER' ? 200 : 0;
+            const total = subtotal + deliveryCost;
+
+            document.getElementById('itemsCount').textContent = cart.length;
+            document.getElementById('subtotal').textContent = `${subtotal} ₽`;
+            document.getElementById('deliveryCost').textContent = `${deliveryCost} ₽`;
+            document.getElementById('totalCost').textContent = `${total} ₽`;
+        }
+
+        // Настройка обработчиков событий
+        function setupEventListeners() {
+            // Обработка изменения количества
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('quantity-btn')) {
+                    const index = parseInt(e.target.getAttribute('data-index'));
+                    if (e.target.classList.contains('plus')) {
+                        cart[index].quantity += 1;
+                    } else if (e.target.classList.contains('minus') && cart[index].quantity > 1) {
+                        cart[index].quantity -= 1;
+                    }
+                    saveCart();
+                }
+
+                if (e.target.classList.contains('remove-item')) {
+                    const index = parseInt(e.target.getAttribute('data-index'));
+                    cart.splice(index, 1);
+                    saveCart();
+                }
+            });
+
+            // Обработка выбора способа доставки
+            document.querySelectorAll('input[name="deliveryType"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    document.querySelectorAll('.delivery-option').forEach(option => {
+                        option.classList.remove('selected');
+                    });
+                    this.closest('.delivery-option').classList.add('selected');
+                    updateCartSummary();
+                });
+            });
+
+            // Навигация по шагам
+            document.getElementById('nextStepBtn').addEventListener('click', function() {
+                if (currentStep === 1) {
+                    if (!currentUser) {
+                        alert('Пожалуйста, войдите в систему для оформления заказа.');
+                        return;
+                    }
+
+                    document.getElementById('cartItems').classList.add('d-none');
+                    document.getElementById('deliveryForm').classList.remove('d-none');
+                    document.getElementById('prevStepBtn').style.display = 'block';
+                    document.getElementById('nextStepBtn').style.display = 'none';
+
+                    document.getElementById('step1').classList.remove('active');
+                    document.getElementById('step1').classList.add('completed');
+                    document.getElementById('step2').classList.add('active');
+
+                    currentStep = 2;
+                }
+            });
+
+            document.getElementById('prevStepBtn').addEventListener('click', function() {
+                if (currentStep === 2) {
+                    document.getElementById('deliveryForm').classList.add('d-none');
+                    document.getElementById('cartItems').classList.remove('d-none');
+                    document.getElementById('prevStepBtn').style.display = 'none';
+                    document.getElementById('nextStepBtn').style.display = 'block';
+
+                    document.getElementById('step2').classList.remove('active');
+                    document.getElementById('step1').classList.remove('completed');
+                    document.getElementById('step1').classList.add('active');
+
+                    currentStep = 1;
+                }
+            });
+
+            // Оформление заказа
+            document.getElementById('placeOrderBtn').addEventListener('click', async function() {
+                const deliveryAddress = document.getElementById('deliveryAddress').value;
+                const deliveryDate = document.getElementById('deliveryDate').value;
+                const deliveryTime = document.getElementById('deliveryTime').value;
+                const comment = document.getElementById('deliveryComment').value;
+
+                if (!deliveryAddress || !deliveryDate || !deliveryTime) {
+                    alert('Пожалуйста, заполните все обязательные поля');
+                    return;
+                }
+
+                const orderRequest = {
+                    userId: currentUser.id,
+                    deliveryAddress: deliveryAddress,
+                    deliveryType: document.querySelector('input[name="deliveryType"]:checked').value,
+                    deliveryDate: `${deliveryDate}T00:00:00`,
+                    deliveryTime: deliveryTime,
+                    comment: comment,
+                    cartItems: cart
+                };
+
+                try {
+                    const response = await fetch(`${API_BASE}/orders`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(orderRequest)
+                    });
+
+                    if (response.ok) {
+                        const order = await response.json();
+
+                        // Очищаем корзину
+                        localStorage.removeItem('cart');
+                        cart = [];
+
+                        // Показываем подтверждение
+                        document.getElementById('deliveryForm').classList.add('d-none');
+                        document.getElementById('confirmation').classList.remove('d-none');
+                        document.getElementById('prevStepBtn').style.display = 'none';
+                        document.getElementById('orderNumber').textContent = `#${order.id}`;
+
+                        document.getElementById('step2').classList.remove('active');
+                        document.getElementById('step2').classList.add('completed');
+                    } else {
+                        alert('Ошибка при оформлении заказа.');
+                    }
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    alert('Ошибка при оформлении заказа.');
+                }
+            });
+
+            // Обработка форм авторизации
+            document.getElementById('loginForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const phone = document.getElementById('loginPhone').value;
+                const password = document.getElementById('loginPassword').value;
+
+                try {
+                    const response = await fetch(`${API_BASE}/auth/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ phone, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        currentUser = data.user;
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        updateNavigation();
+
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                        modal.hide();
+
+                        alert('Вход выполнен успешно!');
+                    } else {
+                        alert(data.message);
+                    }
+                } catch (error) {
+                    console.error('Ошибка входа:', error);
+                    alert('Ошибка при входе в систему');
+                }
+            });
+
+            document.getElementById('registerForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const phone = document.getElementById('registerPhone').value;
+                const password = document.getElementById('registerPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (password !== confirmPassword) {
+                    alert('Пароли не совпадают');
+                    return;
+                }
+
+                const userData = {
+                    phone: phone,
+                    password: password,
+                    name: ''
+                };
+
+                try {
+                    const response = await fetch(`${API_BASE}/auth/register`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(userData)
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        currentUser = data.user;
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        updateNavigation();
+
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+                        modal.hide();
+
+                        alert('Регистрация выполнена успешно!');
+                    } else {
+                        alert(data.message);
+                    }
+                } catch (error) {
+                    console.error('Ошибка регистрации:', error);
+                    alert('Ошибка при регистрации');
+                }
+            });
+
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                localStorage.removeItem('user');
+                localStorage.removeItem('cart');
+                currentUser = null;
+                cart = [];
+                updateNavigation();
+                displayCartItems();
+                updateCartSummary();
+                alert('Вы вышли из системы');
+            });
+        }
+
+        // Сохранение корзины
+        function saveCart() {
+            localStorage.setItem('cart', JSON.stringify(cart));
+            displayCartItems();
+            updateCartSummary();
+            updateCartCount();
+        }
+    </script>
+</body>
+</html>

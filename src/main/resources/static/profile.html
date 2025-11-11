@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный кабинет - Аптека24</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/stylesheet.css">
+    <style>
+        .profile-header {
+            background: linear-gradient(135deg, #4a90e2, #5cb85c);
+            color: white;
+            padding: 2rem 0;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 1rem;
+        }
+        
+        .nav-pills .nav-link.active {
+            background-color: var(--primary-color);
+        }
+        
+        .order-card {
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s;
+        }
+        
+        .order-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .order-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .status-processing {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-delivered {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        
+        .order-product {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f1f1f1;
+        }
+        
+        .order-product:last-child {
+            border-bottom: none;
+        }
+        
+        .product-img-small {
+            width: 50px;
+            height: 50px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+        
+        .personal-data-form {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+<body>
+<!-- Навигация -->
+<nav class="navbar navbar-expand-lg navbar-light sticky-top">
+    <div class="container">
+        <a class="navbar-brand logo" href="index.html">
+            <i class="fas fa-prescription-bottle-alt me-2"></i>Аптека24
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Главная</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="products.html">Товары</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="profile.html">Личный кабинет</a>
+                </li>
+            </ul>
+            <div class="d-flex">
+                <a href="cart.html" class="btn btn-outline-primary me-2 position-relative">
+                    <i class="fas fa-shopping-cart"></i> Корзина
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">0</span>
+                </a>
+                <button class="btn btn-outline-primary" id="logoutBtn">Выйти</button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Шапка профиля -->
+<section class="profile-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-2 text-center">
+                <div class="avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <h1 class="h3" id="userName">Загрузка...</h1>
+                <p class="mb-0" id="userPhone">Загрузка...</p>
+                <p class="mb-0" id="userEmail">Загрузка...</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Основной контент -->
+<section class="profile-content mb-5">
+    <div class="container">
+        <div class="row">
+            <!-- Боковое меню -->
+            <div class="col-md-3 mb-4">
+                <div class="list-group">
+                    <a href="#history" class="list-group-item list-group-item-action active" data-bs-toggle="list">
+                        <i class="fas fa-history me-2"></i> История заказов
+                    </a>
+                    <a href="#personal" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                        <i class="fas fa-user me-2"></i> Личные данные
+                    </a>
+                    <a href="#security" class="list-group-item list-group-item-action" data-bs-toggle="list">
+                        <i class="fas fa-shield-alt me-2"></i> Безопасность
+                    </a>
+                </div>
+            </div>
+
+            <!-- Контент вкладок -->
+            <div class="col-md-9">
+                <div class="tab-content">
+                    <!-- Вкладка истории заказов -->
+                    <div class="tab-pane fade show active" id="history">
+                        <h2 class="mb-4">История заказов</h2>
+                        <div id="ordersList">
+                            <!-- Заказы будут загружены через JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Вкладка личных данных -->
+                    <div class="tab-pane fade" id="personal">
+                        <h2 class="mb-4">Личные данные</h2>
+                        <div class="personal-data-form">
+                            <form id="personalDataForm">
+                                <div class="form-section">
+                                    <h5 class="mb-3">Основная информация</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="firstName" class="form-label">Имя</label>
+                                            <input type="text" class="form-control" id="firstName" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="lastName" class="form-label">Фамилия</label>
+                                            <input type="text" class="form-control" id="lastName">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="phone" class="form-label">Телефон</label>
+                                            <input type="tel" class="form-control" id="phone" required readonly>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Вкладка безопасности -->
+                    <div class="tab-pane fade" id="security">
+                        <h2 class="mb-4">Безопасность</h2>
+                        <div class="personal-data-form">
+                            <form id="securityForm">
+                                <div class="form-section">
+                                    <h5 class="mb-3">Смена пароля</h5>
+                                    <div class="mb-3">
+                                        <label for="currentPassword" class="form-label">Текущий пароль</label>
+                                        <input type="password" class="form-control" id="currentPassword" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="newPassword" class="form-label">Новый пароль</label>
+                                        <input type="password" class="form-control" id="newPassword" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="confirmNewPassword" class="form-label">Подтверждение нового пароля</label>
+                                        <input type="password" class="form-control" id="confirmNewPassword" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Сменить пароль</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Футер -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h5 class="logo mb-3"><i class="fas fa-prescription-bottle-alt me-2"></i>Аптека24</h5>
+                <p>Аптека с доставкой на дом. Лекарства, медицинские товары и средства гигиены.</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Контакты</h5>
+                <p><i class="fas fa-phone me-2"></i> 8 (495) 000-00-01</p>
+                <p><i class="fas fa-envelope me-2"></i> info@apteka24.ru</p>
+                <p><i class="fas fa-map-marker-alt me-2"></i> г. Рязань, ул. Циолковского, 5к1</p>
+            </div>
+            <div class="col-md-4">
+                <h5>Часы работы</h5>
+                <p>Пн-Пт: 8:00 - 22:00</p>
+                <p>Сб-Вс: 9:00 - 21:00</p>
+                <p>Доставка: круглосуточно</p>
+            </div>
+        </div>
+        <hr class="my-4">
+        <div class="text-center">
+            <p>&copy; 2023 Аптека24. Все права защищены.</p>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const API_BASE = 'http://localhost:8080/api';
+    let currentUser = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        checkAuth();
+        loadUserOrders();
+        updateCartCount();
+    });
+
+    // Проверка авторизации
+    async function checkAuth() {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+            currentUser = JSON.parse(userData);
+            displayUserInfo();
+        } else {
+            window.location.href = 'index.html';
+        }
+    }
+
+    // Отображение информации о пользователе
+    function displayUserInfo() {
+        document.getElementById('userName').textContent = currentUser.name || 'Не указано';
+        document.getElementById('userPhone').textContent = currentUser.phone;
+        document.getElementById('userEmail').textContent = currentUser.email || 'Не указано';
+
+        // Заполняем форму личных данных
+        document.getElementById('firstName').value = currentUser.name || '';
+        document.getElementById('phone').value = currentUser.phone;
+        document.getElementById('email').value = currentUser.email || '';
+    }
+
+    // Обновление счетчика корзины
+    function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        document.getElementById('cartCount').textContent = cart.length;
+    }
+
+    // Загрузка заказов пользователя
+    async function loadUserOrders() {
+        try {
+            const response = await fetch(`${API_BASE}/orders/user/${currentUser.id}`);
+            const orders = await response.json();
+            displayOrders(orders);
+        } catch (error) {
+            console.error('Ошибка загрузки заказов:', error);
+            document.getElementById('ordersList').innerHTML = `
+                <div class="alert alert-warning">
+                    Ошибка при загрузке заказов
+                </div>
+            `;
+        }
+    }
+
+    // Отображение заказов
+    function displayOrders(orders) {
+        const ordersContainer = document.getElementById('ordersList');
+
+        if (orders.length === 0) {
+            ordersContainer.innerHTML = `
+                <div class="alert alert-info">
+                    У вас пока нет заказов
+                </div>
+            `;
+            return;
+        }
+
+        ordersContainer.innerHTML = '';
+
+        orders.forEach(order => {
+            const orderDate = new Date(order.orderDate).toLocaleDateString('ru-RU');
+            const statusBadge = getStatusBadge(order.status);
+            const totalAmount = order.totalAmount || calculateOrderTotal(order.items);
+
+            const orderElement = `
+                <div class="order-card">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h5 class="mb-1">Заказ #${order.id}</h5>
+                            <p class="text-muted mb-0">Оформлен ${orderDate}</p>
+                        </div>
+                        <div class="text-end">
+                            <span class="order-status ${getStatusClass(order.status)}">${statusBadge}</span>
+                            <p class="mb-0 mt-1 fw-bold">${totalAmount} ₽</p>
+                        </div>
+                    </div>
+
+                    <div class="order-products">
+                        ${order.items ? order.items.map(item => `
+                            <div class="order-product">
+                                <div class="product-img-small">
+                                    <i class="fas fa-pills text-muted"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0">${item.product.name}</h6>
+                                    <p class="text-muted mb-0">${item.quantity} шт. × ${item.price} ₽</p>
+                                </div>
+                            </div>
+                        `).join('') : ''}
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div>
+                            <p class="mb-0"><strong>Адрес доставки:</strong> ${order.deliveryAddress || 'Не указан'}</p>
+                        </div>
+                        <button class="btn btn-outline-primary btn-sm repeat-order" data-order-id="${order.id}">
+                            Повторить заказ
+                        </button>
+                    </div>
+                </div>
+            `;
+            ordersContainer.innerHTML += orderElement;
+        });
+
+        // Обработчики для кнопок повторения заказа
+        document.querySelectorAll('.repeat-order').forEach(button => {
+            button.addEventListener('click', function() {
+                const orderId = this.getAttribute('data-order-id');
+                repeatOrder(orderId, orders);
+            });
+        });
+    }
+
+    // Расчет общей суммы заказа
+    function calculateOrderTotal(items) {
+        return items.reduce((total, item) => total + (item.price * item.quantity), 0);
+    }
+
+    // Получение класса статуса
+    function getStatusClass(status) {
+        switch (status) {
+            case 'PROCESSING': return 'status-processing';
+            case 'DELIVERED': return 'status-delivered';
+            case 'CANCELLED': return 'status-cancelled';
+            default: return 'status-processing';
+        }
+    }
+
+    // Получение текста статуса
+    function getStatusBadge(status) {
+        switch (status) {
+            case 'PROCESSING': return 'В обработке';
+            case 'DELIVERED': return 'Доставлен';
+            case 'CANCELLED': return 'Отменен';
+            default: return status;
+        }
+    }
+
+    // Повторение заказа
+    function repeatOrder(orderId, orders) {
+        const order = orders.find(o => o.id == orderId);
+        if (!order || !order.items) return;
+
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        order.items.forEach(item => {
+            const existingItem = cart.find(cartItem => cartItem.product.id === item.product.id);
+
+            if (existingItem) {
+                existingItem.quantity += item.quantity;
+            } else {
+                cart.push({
+                    product: item.product,
+                    quantity: item.quantity
+                });
+            }
+        });
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+        updateCartCount();
+        alert('Товары из заказа добавлены в корзину!');
+    }
+
+    // Обработка формы личных данных
+    document.getElementById('personalDataForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // В реальном приложении здесь был бы запрос к API для обновления данных
+        alert('Изменения сохранены! (В реальном приложении данные будут отправлены на сервер)');
+    });
+
+    // Обработка формы смены пароля
+    document.getElementById('securityForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const currentPassword = document.getElementById('currentPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+        if (newPassword !== confirmNewPassword) {
+            alert('Пароли не совпадают!');
+            return;
+        }
+
+        // В реальном приложении здесь был бы запрос к API для смены пароля
+        alert('Пароль успешно изменен! (В реальном приложении данные будут отправлены на сервер)');
+        document.getElementById('securityForm').reset();
+    });
+
+    // Обработка кнопки выхода
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        if (confirm('Вы уверены, что хотите выйти?')) {
+            localStorage.removeItem('user');
+            localStorage.removeItem('cart');
+            window.location.href = 'index.html';
+        }
+    });
+</script>
+</body>
+</html>
